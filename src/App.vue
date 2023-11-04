@@ -2,22 +2,26 @@
   <div class="container">
     <header>
       <h1>Quizzes</h1>
-      <input type="text" placeholder="Search..." />
+      <input v-model.trim="search" type="text" placeholder="Search..." />
     </header>
     <div class="options-container">
-      <div class="card">
-        <img
-          src="https://www.bwseducationconsulting.com/wp-content/uploads/2020/08/bws-maths-tutoring.jpg"
-          alt="board with equations image"
-        />
-        <div class="card-text">
-          <h2>Math</h2>
-          <p>15 questions</p>
-        </div>
-      </div>
+      <Card v-for="quiz in quizzes" :key="quiz.id" :quiz="quiz" />
     </div>
   </div>
 </template>
+
+<script setup>
+import Card from './components/Card.vue'
+import q from './data/quizzes.json'
+import { ref, watch } from 'vue'
+
+const quizzes = ref(q)
+const search = ref('')
+
+watch(search, () => {
+  quizzes.value = q.filter((quiz) => quiz.name.toLowerCase().includes(search.value.toLowerCase()))
+})
+</script>
 
 <style scoped>
 .container {
@@ -48,30 +52,5 @@ header input {
   display: flex;
   flex-wrap: wrap;
   margin-top: 40px;
-}
-
-/* CARD */
-.card {
-  width: 310px;
-  overflow: hidden;
-  border-radius: 2%;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 35px;
-  margin-right: 20px;
-  cursor: pointer;
-}
-
-.card img {
-  width: 100%;
-  height: 190px;
-  margin: 0px;
-}
-
-.card .card-text {
-  padding: 0 5px;
-}
-
-.card .card-text h2 {
-  font-weight: bold;
 }
 </style>
